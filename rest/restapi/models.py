@@ -1,8 +1,8 @@
-
+import time
 
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-
+from .photo_conv import watermark_with_transparency
 
 class User(AbstractUser):
     date_of_birth = models.DateField(blank=True, null=True)
@@ -12,6 +12,14 @@ class User(AbstractUser):
         ('female', 'FEMALE'),
     )
     gender = models.CharField(max_length=10, choices=GENDERS)
+
+    def save(self, *args, **kwargs):
+        if self.photo:
+            print(f'SELFPHOTO: {self.photo}')
+            print(type(self.photo))
+            time.sleep(20)
+            # self.photo = watermark_with_transparency(self.photo, position=(0, 0))
+        super(User, self).save(*args, **kwargs)
 
 
 class Like(models.Model):
